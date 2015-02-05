@@ -1,0 +1,17 @@
+{
+  "uuid": "9580f573-44fd-437c-91e4-df82accf76da",
+  "shortName": "rescued-by-pebble",
+  "longName": "rescued-by-pebble",
+  "companyName": "MakeAwesomeHappen",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
