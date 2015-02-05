@@ -1,12 +1,12 @@
 {
   "uuid": "9580f573-44fd-437c-91e4-df82accf76da",
   "shortName": "rescued-by-pebble",
-  "longName": "rescued-by-pebble",
-  "companyName": "MakeAwesomeHappen",
+  "longName": "Rescued by Pebble",
+  "companyName": "alexchiri.com",
   "versionCode": 1,
   "versionLabel": "1.0",
   "watchapp": {
-    "watchface": false
+    "watchface": true
   },
   "appKeys": {
     "dummy": 0
