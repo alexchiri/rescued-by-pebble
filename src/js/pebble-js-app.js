@@ -20,13 +20,14 @@ Pebble.addEventListener("webviewclosed", function (e) {
     }
 });
 
-// Listen for when an AppMessage is received
-Pebble.addEventListener('appmessage',
-    function (e) {
-        console.log("AppMessage received!");
-        getRescueTimeProductivity();
-    }
-);
+var xhrRequest = function (url, type, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        callback(this.responseText);
+    };
+    xhr.open(type, url);
+    xhr.send();
+};
 
 var getRescueTimeProductivity = function () {
     var url = "https://www.rescuetime.com/anapi/data?key=" + localStorage.getItem("apiKey") + "&format=json&perspective=interval&restrict_kind=productivity&resolution_time=minute&restrict_kind=productivity";
@@ -48,7 +49,7 @@ var getRescueTimeProductivity = function () {
                 var productivityData = json.rows[i];
                 var dataDate = Date.parse(productivityData[0]);
 
-                if(maxDate == null) {
+                if(maxDate === null) {
                     maxDate = dataDate;
                 } else {
                     if(dataDate < maxDate) {
@@ -66,11 +67,13 @@ var getRescueTimeProductivity = function () {
     );
 };
 
-var xhrRequest = function (url, type, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        callback(this.responseText);
-    };
-    xhr.open(type, url);
-    xhr.send();
-};
+// Listen for when an AppMessage is received
+Pebble.addEventListener('appmessage',
+    function (e) {
+        console.log("AppMessage received!");
+        getRescueTimeProductivity();
+    }
+);
+
+
+
