@@ -1,18 +1,22 @@
 {
-  "uuid": "9580f573-44fd-437c-91e4-df82accf76da",
-  "shortName": "rescued-by-pebble",
-  "longName": "Rescued by Pebble",
-  "companyName": "alexchiri.com",
-  "versionCode": 1,
-  "versionLabel": "1.0",
-  "watchapp": {
-    "watchface": true
-  },
-  "appKeys": {
-    "apiKey": 0
-  },
-  "resources": {
-    "media": []
-  },
-  "capabilities": [ "configurable" ]
+    "appKeys": {
+        "apiKey": 0,
+        "productivity": 250
+    },
+    "capabilities": [
+        "configurable"
+    ],
+    "companyName": "alexchiri.com",
+    "longName": "Rescued by Pebble",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "rescued-by-pebble",
+    "uuid": "9580f573-44fd-437c-91e4-df82accf76da",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
 }

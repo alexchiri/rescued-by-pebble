@@ -4,9 +4,33 @@ static Window *window;
 static TextLayer *s_text_layer;
 static TextLayer *s_rescue_time_layer;
 #define API_KEY 0
+#define PRODUCTIVITY 250  
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
+  
+  static char string_productivity_buffer[32];
+  // Read first item
+  Tuple *t = dict_read_first(iterator);
+
+  // For all items
+  while(t != NULL) {
+    // Which key was received?
+    switch(t->key) {
+    case PRODUCTIVITY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "%d", (int)t->value->cstring);
+      snprintf(string_productivity_buffer, sizeof(string_productivity_buffer), "%d", (int)t->value->uint8);
+      break;    
+    default:
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
+      break;
+    }
+
+    // Look for next item
+    t = dict_read_next(iterator);
+  }
+  
+  text_layer_set_text(s_rescue_time_layer, string_productivity_buffer);
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {

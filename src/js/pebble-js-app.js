@@ -44,19 +44,35 @@ var getRescueTimeProductivity = function () {
                 var dataDate = Date.parse(productivityData[0]);
 
                 if(maxDate === null) {
-                    maxDate = dataDate;
+                    maxDate = dataDate;                  
+                }
+ 
+               if(dataDate < maxDate) {
+                  shouldStop = true;
                 } else {
-                    if(dataDate < maxDate) {
-                        shouldStop = true;
-                    } else {
-                        sum = sum + parseInt(productivityData[1]) * parseInt(productivityData[3]);
-                        weight = weight + parseInt(productivityData[1]);
-                    }
+                  sum = sum + parseInt(productivityData[1]) * (parseInt(productivityData[3]) + 2) * 25;
+                  weight = weight + parseInt(productivityData[1]);                    
                 }
             }
+          
+          console.log("Sum is: " + sum);
+          console.log("Weight is: " + weight);
 
-            var productivity = sum / weight;
+            var productivity = Math.round(sum / weight);
             console.log("Calculated productivity level to: " + productivity);
+          
+          var dictionary = {
+            "productivity": productivity
+          };
+          
+          Pebble.sendAppMessage(dictionary,
+            function(e) {
+              console.log("RescueTime productivity info sent to Pebble successfully!");
+            },
+            function(e) {
+              console.log("Error sending RescueTime productivity info to Pebble!");
+            }
+          );
         }
     );
 };
