@@ -1,10 +1,4 @@
-Pebble.addEventListener("ready",
-    function (e) {
-        console.log("Hello world! - Sent from your javascript application.");
 
-        getRescueTimeProductivity();
-    }
-);
 
 Pebble.addEventListener('showConfiguration', function (e) {
     // Show config page
@@ -67,10 +61,19 @@ var getRescueTimeProductivity = function () {
     );
 };
 
+Pebble.addEventListener("ready",
+    function (e) {
+        console.log("Hello world! - Sent from your javascript application.");
+
+        getRescueTimeProductivity();
+    }
+);
+
 // Listen for when an AppMessage is received
 Pebble.addEventListener('appmessage',
     function (e) {
         console.log("AppMessage received!");
+        
         getRescueTimeProductivity();
     }
 );
