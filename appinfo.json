@@ -13,5 +13,6 @@
   },
   "resources": {
     "media": []
-  }
+  },
+  "capabilities": [ "configurable" ]
 }
