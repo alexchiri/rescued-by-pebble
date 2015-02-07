@@ -3,12 +3,25 @@
 static Window *window;
 static TextLayer *s_text_layer;
 static TextLayer *s_rescue_time_layer;
+#define API_KEY 0
 
-static void update_time() {
-  // Get a tm structure
-  time_t temp = time(NULL);
-  struct tm *tick_time = localtime(&temp);
+static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
+}
 
+static void inbox_dropped_callback(AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Message dropped!");
+}
+
+static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
+}
+
+static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
+  APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success!");
+}
+
+static void update_time(struct tm *tick_time) {
   // Create a long-lived buffer
   static char buffer[] = "00:00";
 
@@ -25,8 +38,27 @@ static void update_time() {
   text_layer_set_text(s_text_layer, buffer);
 }
 
+static void get_rescue_time_info() {
+  // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+
+    // Send the message!
+    app_message_outbox_send();
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Sent message to get RescueTime productivity data!");
+}
+
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  update_time();
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "One more minute passed, updating time!");
+  update_time(tick_time);
+
+  if(tick_time->tm_min % 5 == 0) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Time to get some more RescueTime productivity data!");
+    get_rescue_time_info();
+  }
 }
 
 static void window_load(Window *window) {
@@ -65,14 +97,29 @@ static void init(void) {
   });
   const bool animated = true;
 
+  window_stack_push(window, animated);
+
+  // Update time immediately to avoid flash of "timeless" clock
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+    update_time(t);
+
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 
-  window_stack_push(window, animated);
+  // Register callbacks
+  app_message_register_inbox_received(inbox_received_callback);
+  app_message_register_inbox_dropped(inbox_dropped_callback);
+  app_message_register_outbox_failed(outbox_failed_callback);
+  app_message_register_outbox_sent(outbox_sent_callback);
+
+  // start the mailbox
+  app_message_open(64, 64);
 }
 
 static void deinit(void) {
   window_destroy(window);
+  tick_timer_service_unsubscribe();
 }
 
 int main(void) {
