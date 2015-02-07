@@ -1,5 +1,3 @@
-
-
 Pebble.addEventListener('showConfiguration', function (e) {
     // Show config page
     Pebble.openURL('http://192.168.2.12:8000/settings.html');
@@ -26,7 +24,7 @@ var xhrRequest = function (url, type, callback) {
 var getRescueTimeProductivity = function () {
     var url = "https://www.rescuetime.com/anapi/data?key=" + localStorage.getItem("apiKey") + "&format=json&perspective=interval&restrict_kind=productivity&resolution_time=minute&restrict_kind=productivity";
     xhrRequest(url, 'GET',
-        function(responseText) {
+        function (responseText) {
             // responseText contains a JSON object with RescueTime productivity data
             var json = JSON.parse(responseText);
 
@@ -39,40 +37,40 @@ var getRescueTimeProductivity = function () {
             var sum = 0;
             var weight = 0;
 
-            for(var i = json.rows.length - 1; i >= 0 && !shouldStop; i--) {
+            for (var i = json.rows.length - 1; i >= 0 && !shouldStop; i--) {
                 var productivityData = json.rows[i];
                 var dataDate = Date.parse(productivityData[0]);
 
-                if(maxDate === null) {
-                    maxDate = dataDate;                  
+                if (maxDate === null) {
+                    maxDate = dataDate;
                 }
- 
-               if(dataDate < maxDate) {
-                  shouldStop = true;
+
+                if (dataDate < maxDate) {
+                    shouldStop = true;
                 } else {
-                  sum = sum + parseInt(productivityData[1]) * (parseInt(productivityData[3]) + 2) * 25;
-                  weight = weight + parseInt(productivityData[1]);                    
+                    sum = sum + parseInt(productivityData[1]) * (parseInt(productivityData[3]) + 2) * 25;
+                    weight = weight + parseInt(productivityData[1]);
                 }
             }
-          
-          console.log("Sum is: " + sum);
-          console.log("Weight is: " + weight);
+
+            console.log("Sum is: " + sum);
+            console.log("Weight is: " + weight);
 
             var productivity = Math.round(sum / weight);
             console.log("Calculated productivity level to: " + productivity);
-          
-          var dictionary = {
-            "productivity": productivity
-          };
-          
-          Pebble.sendAppMessage(dictionary,
-            function(e) {
-              console.log("RescueTime productivity info sent to Pebble successfully!");
-            },
-            function(e) {
-              console.log("Error sending RescueTime productivity info to Pebble!");
-            }
-          );
+
+            var dictionary = {
+                "productivity": productivity
+            };
+
+            Pebble.sendAppMessage(dictionary,
+                function (e) {
+                    console.log("RescueTime productivity info sent to Pebble successfully!");
+                },
+                function (e) {
+                    console.log("Error sending RescueTime productivity info to Pebble!");
+                }
+            );
         }
     );
 };
@@ -89,10 +87,7 @@ Pebble.addEventListener("ready",
 Pebble.addEventListener('appmessage',
     function (e) {
         console.log("AppMessage received!");
-        
+
         getRescueTimeProductivity();
     }
 );
-
-
-
