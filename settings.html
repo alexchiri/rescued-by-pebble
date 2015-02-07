@@ -11,7 +11,7 @@
 <body>
 <div data-role="page" id="main">
     <div data-role="header" class="jqm-header">
-        <h1>Rescued by Pebble Settings</h1>
+        <h1>Rescued by Pebble Settings v0.01</h1>
     </div>
 
     <div data-role="content">
@@ -31,13 +31,18 @@
 <script>
     function getSettings() {
         return {
-            'apiKey': $('#all-caps').val()
+            'apiKey': $('#api-key').val()
         };
+    }
+
+    function saveSettings(settings) {
+        localStorage.setItem("apiKey", settings.apiKey);
     }
 
     var apiKey;
 
     $(document).ready(function () {
+        console.log("Loaded settings page, initialising values!");
         apiKey = localStorage.getItem("apiKey");
 
         if(apiKey) {
@@ -51,7 +56,11 @@
         });
 
         $('#button-submit').click(function() {
-            document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(getSettings()));
+            var settings = getSettings();
+            saveSettings(settings);
+
+            console.log("settings: " + JSON.stringify(settings));
+            document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(settings));
         });
 
     });
