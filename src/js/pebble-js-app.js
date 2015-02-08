@@ -1,6 +1,6 @@
 Pebble.addEventListener('showConfiguration', function (e) {
     // Show config page
-    Pebble.openURL('http://192.168.2.12:8000/settings.html');
+    Pebble.openURL('http://192.168.2.12:8000/settings_v2.html');
 });
 
 Pebble.addEventListener("webviewclosed", function (e) {
@@ -8,7 +8,7 @@ Pebble.addEventListener("webviewclosed", function (e) {
         settings = (rt === "undefined" ? {} : JSON.parse(decodeURIComponent(e.response)));
     if (Object.keys(settings).length > 0) {
         console.log("Got settings: " + settings);
-        Pebble.sendAppMessage(settings);
+        //Pebble.sendAppMessage(settings);
     }
 });
 

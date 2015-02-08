@@ -4,7 +4,7 @@ static Window *window;
 static TextLayer *s_text_layer;
 static TextLayer *s_rescue_time_layer;
 #define API_KEY 0
-#define PRODUCTIVITY 250  
+#define PRODUCTIVITY 1
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
@@ -18,7 +18,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // Which key was received?
     switch(t->key) {
     case PRODUCTIVITY:
-      APP_LOG(APP_LOG_LEVEL_INFO, "%d", (int)t->value->cstring);
       snprintf(string_productivity_buffer, sizeof(string_productivity_buffer), "%d", (int)t->value->uint8);
       break;    
     default:
@@ -102,7 +101,7 @@ static void window_load(Window *window) {
 
   text_layer_set_font(s_rescue_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
   text_layer_set_text_alignment(s_rescue_time_layer, GTextAlignmentCenter);
-  text_layer_set_text(s_rescue_time_layer, "2");
+  text_layer_set_text(s_rescue_time_layer, "-");
 
   layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
   layer_add_child(window_layer, text_layer_get_layer(s_rescue_time_layer));
