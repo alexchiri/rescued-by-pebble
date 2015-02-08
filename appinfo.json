@@ -10,7 +10,38 @@
     "longName": "Rescued by Pebble",
     "projectType": "native",
     "resources": {
-        "media": []
+        "media": [
+          {
+            "type": "png",
+            "name": "IMAGE_25_PERCENT",
+            "file": "images/25percent.png"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_50_PERCENT",
+            "file": "images/50percent.png"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_75_PERCENT",
+            "file": "images/75percent.png"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_100_PERCENT",
+            "file": "images/100percent.png"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_BT_ON",
+            "file": "images/bton.png"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_BT_OFF",
+            "file": "images/btoff.png"
+          }
+        ]
     },
     "shortName": "rescued-by-pebble",
     "uuid": "9580f573-44fd-437c-91e4-df82accf76da",

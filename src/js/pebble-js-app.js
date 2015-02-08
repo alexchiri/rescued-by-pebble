@@ -1,6 +1,6 @@
 Pebble.addEventListener('showConfiguration', function (e) {
     // Show config page
-    Pebble.openURL('http://192.168.2.12:8000/settings_v2.html');
+    Pebble.openURL('http://0f8f28fe275e3a043777-67ab80ec00c7299bd1255995bf933a71.r1.cf2.rackcdn.com/settings_v2.html');
 });
 
 Pebble.addEventListener("webviewclosed", function (e) {
