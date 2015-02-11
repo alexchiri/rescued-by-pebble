@@ -1,6 +1,7 @@
 Pebble.addEventListener('showConfiguration', function (e) {
     // Show config page
-    Pebble.openURL('http://0f8f28fe275e3a043777-67ab80ec00c7299bd1255995bf933a71.r1.cf2.rackcdn.com/settings_v2.html');
+    Pebble.openURL('http://0f8f28fe275e3a043777-67ab80ec00c7299bd1255995bf933a71.r1.cf2.rackcdn.com/settings_v3.html');
+    //Pebble.openURL('http://192.168.2.14:8000/settings_v3.html');
 });
 
 Pebble.addEventListener("webviewclosed", function (e) {
@@ -8,7 +9,7 @@ Pebble.addEventListener("webviewclosed", function (e) {
         settings = (rt === "undefined" ? {} : JSON.parse(decodeURIComponent(e.response)));
     if (Object.keys(settings).length > 0) {
         console.log("Got settings: " + settings);
-        //Pebble.sendAppMessage(settings);
+        Pebble.sendAppMessage(settings);
     }
 });
 
@@ -51,6 +52,9 @@ var getRescueTimeProductivity = function () {
                     sum = sum + parseInt(productivityData[1]) * (parseInt(productivityData[3]) + 2) * 25;
                     weight = weight + parseInt(productivityData[1]);
                 }
+
+                console.log("dataDate: " + dataDate);
+                console.log("maxDate: " + maxDate);
             }
 
             console.log("Sum is: " + sum);

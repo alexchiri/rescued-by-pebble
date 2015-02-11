@@ -12,9 +12,13 @@ static Layer *s_progress_layer;
 static InverterLayer *inverter_layer;
 static int productivity;
 static bool bluetooth;
+static bool inverted;
 
 #define API_KEY 0
 #define PRODUCTIVITY 1
+#define INVERTED 2
+
+#define INVERTED_SETTINGS_KEY 0
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
@@ -31,6 +35,17 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       productivity = (int)t->value->uint8;
       layer_mark_dirty(s_progress_layer);
       layer_mark_dirty(s_status_image_layer);
+      break;
+    case INVERTED:
+      if(strcmp("on", t->value->cstring) == 0) {
+        persist_write_bool(INVERTED_SETTINGS_KEY, true);
+        inverted = true;
+      } else {
+        persist_write_bool(INVERTED_SETTINGS_KEY, false);
+        inverted = false;
+      }
+      break;
+    case API_KEY:
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -192,15 +207,17 @@ static void window_load(Window *window) {
   s_progress_layer = layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
   layer_set_update_proc(s_progress_layer, update_progress_layer_proc);
 
-  inverter_layer = inverter_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
-
   layer_add_child(window_layer, text_layer_get_layer(s_day_name_text_layer));
   layer_add_child(window_layer, text_layer_get_layer(s_time_text_layer));
   layer_add_child(window_layer, text_layer_get_layer(s_date_week_time_layer));
   layer_add_child(window_layer, s_bt_image_layer);
   layer_add_child(window_layer, s_status_image_layer);
   layer_add_child(window_layer, s_progress_layer);
-//  layer_add_child(window_layer, inverter_layer_get_layer(inverter_layer));
+
+  if(inverted) {
+    inverter_layer = inverter_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
+    layer_add_child(window_layer, inverter_layer_get_layer(inverter_layer));
+  }
 }
 
 static void window_unload(Window *window) {
@@ -211,12 +228,17 @@ static void window_unload(Window *window) {
   gbitmap_destroy(s_status_image);
   gbitmap_destroy(s_bt_image);
 
+  inverter_layer_destroy(inverter_layer);
+
   layer_destroy(s_bt_image_layer);
   layer_destroy(s_status_image_layer);
   layer_destroy(s_progress_layer);
 }
 
 static void init(void) {
+  // read the settings
+  inverted = persist_read_bool(INVERTED_SETTINGS_KEY);
+
   window = window_create();
 
   window_set_window_handlers(window, (WindowHandlers) {

@@ -1,7 +1,8 @@
 {
     "appKeys": {
         "apiKey": 0,
-        "productivity": 1
+        "productivity": 1,
+        "inverted": 2
     },
     "capabilities": [
         "configurable"
