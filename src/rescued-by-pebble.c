@@ -40,9 +40,22 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     case INVERTED:
       if(strcmp("on", t->value->cstring) == 0) {
         persist_write_bool(INVERTED_SETTINGS_KEY, true);
+
+        if(inverted == false) {
+          Layer *window_layer = window_get_root_layer(window);
+          GRect bounds = layer_get_bounds(window_layer);
+
+          inverter_layer = inverter_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
+          layer_add_child(window_layer, inverter_layer_get_layer(inverter_layer));
+        }
         inverted = true;
       } else {
         persist_write_bool(INVERTED_SETTINGS_KEY, false);
+
+        if(inverted == true) {
+          inverter_layer_destroy(inverter_layer);
+        }
+
         inverted = false;
       }
       break;
@@ -240,8 +253,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, s_progress_layer);
 
   if(inverted) {
-    inverter_layer = inverter_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
-    layer_add_child(window_layer, inverter_layer_get_layer(inverter_layer));
+
   }
 }
 
