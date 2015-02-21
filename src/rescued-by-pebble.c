@@ -10,7 +10,7 @@ static GBitmap *s_status_image;
 static GBitmap *s_bt_image;
 static Layer *s_progress_layer;
 static InverterLayer *inverter_layer;
-static GFont s_anonymous_pro_font_42;
+static GFont *s_banana_brick_font_42;
 static int productivity;
 static bool bluetooth;
 static bool inverted;
@@ -210,11 +210,11 @@ static void window_load(Window *window) {
   text_layer_set_font(s_day_name_text_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   text_layer_set_text_alignment(s_day_name_text_layer, GTextAlignmentCenter);
 
-  s_anonymous_pro_font_42 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_BANANA_BRICK_42));
+  s_banana_brick_font_42 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_BANANA_BRICK_42));
   s_time_text_layer = text_layer_create((GRect) { .origin = { 0, 30 }, .size = { bounds.size.w - 35, 43 } });
   text_layer_set_background_color(s_time_text_layer, GColorClear);
   text_layer_set_text_color(s_time_text_layer, GColorBlack);
-  text_layer_set_font(s_time_text_layer, s_anonymous_pro_font_42);
+  text_layer_set_font(s_time_text_layer, s_banana_brick_font_42);
   text_layer_set_text_alignment(s_time_text_layer, GTextAlignmentCenter);
 
   s_date_week_time_layer = text_layer_create((GRect) { .origin = { 0, 130 }, .size = { bounds.size.w, 20 } });
@@ -246,7 +246,7 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
-  fonts_unload_custom_font(s_anonymous_pro_font_42);
+  fonts_unload_custom_font(s_banana_brick_font_42);
 
   text_layer_destroy(s_time_text_layer);
   text_layer_destroy(s_day_name_text_layer);
