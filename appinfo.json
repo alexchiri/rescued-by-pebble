@@ -41,6 +41,11 @@
             "type": "png",
             "name": "IMAGE_BT_OFF",
             "file": "images/btoff.png"
+          },
+          {
+            "type": "font",
+            "name": "BANANA_BRICK_42",
+            "file": "fonts/banana_brick_42.ttf"
           }
         ]
     },
