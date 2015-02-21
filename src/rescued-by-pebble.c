@@ -69,8 +69,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // Look for next item
     t = dict_read_next(iterator);
   }
-  
-//  text_layer_set_text(s_rescue_time_layer, string_productivity_buffer);
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
@@ -153,11 +151,11 @@ static void update_bt_image_layer_proc(Layer *layer, GContext *ctx) {
 }
 
 void bluetooth_callback(bool connected) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "bluetooth_callback: start");
   bluetooth = connected;
 
-//TODO: to figure out why this dirty causes a crash
-//  layer_mark_dirty(s_bt_image_layer);
-//  APP_LOG(APP_LOG_LEVEL_ERROR, "Marked layer dirty");
+  layer_mark_dirty(s_bt_image_layer);
+  APP_LOG(APP_LOG_LEVEL_ERROR, "bluetooth_callback: end");
 }
 
 static void update_status_image_layer_proc(Layer *layer, GContext *ctx) {
@@ -209,22 +207,19 @@ static void update_progress_layer_proc(Layer *layer, GContext *ctx) {
 }
 
 static void window_load(Window *window) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Got into window_load!");
-
-  bool is_connected = bluetooth_connection_service_peek();
-  bluetooth_callback(is_connected);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "window_load: start");
 
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_day_name_text_layer = text_layer_create((GRect) { .origin = { 0, 8 }, .size = { bounds.size.w - 35, 25 } });
+  s_day_name_text_layer = text_layer_create((GRect) { .origin = { 0, 13 }, .size = { bounds.size.w - 30, 25 } });
   text_layer_set_background_color(s_day_name_text_layer, GColorClear);
   text_layer_set_text_color(s_day_name_text_layer, GColorBlack);
   text_layer_set_font(s_day_name_text_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   text_layer_set_text_alignment(s_day_name_text_layer, GTextAlignmentCenter);
 
-  s_banana_brick_font_42 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_BANANA_BRICK_42));
-  s_time_text_layer = text_layer_create((GRect) { .origin = { 0, 30 }, .size = { bounds.size.w - 35, 43 } });
+  s_banana_brick_font_42 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_BANANA_BRICK_36));
+  s_time_text_layer = text_layer_create((GRect) { .origin = { 0, 35 }, .size = { bounds.size.w - 30, 43 } });
   text_layer_set_background_color(s_time_text_layer, GColorClear);
   text_layer_set_text_color(s_time_text_layer, GColorBlack);
   text_layer_set_font(s_time_text_layer, s_banana_brick_font_42);
@@ -252,9 +247,10 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, s_status_image_layer);
   layer_add_child(window_layer, s_progress_layer);
 
-  if(inverted) {
+  bool is_connected = bluetooth_connection_service_peek();
+  bluetooth_callback(is_connected);
 
-  }
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "window_load: end");
 }
 
 static void window_unload(Window *window) {
@@ -275,7 +271,7 @@ static void window_unload(Window *window) {
 }
 
 static void init(void) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Got into init!");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "init: start");
   // read the settings
   inverted = persist_read_bool(INVERTED_SETTINGS_KEY);
 
@@ -307,6 +303,7 @@ static void init(void) {
   app_message_open(64, 64);
 
   bluetooth_connection_service_subscribe(bluetooth_callback);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "init: end");
 }
 
 static void deinit(void) {
