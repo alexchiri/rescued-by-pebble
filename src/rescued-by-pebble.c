@@ -109,17 +109,22 @@ static void get_rescue_time_info() {
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "One more minute passed, updating time!");
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "tick_handler: start, Heap Available: %d", heap_bytes_free());
   update_time(tick_time);
 
   if(tick_time->tm_min % 5 == 0) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "Time to get some more RescueTime productivity data!");
     get_rescue_time_info();
   }
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "tick_handler: end, Heap Available: %d", heap_bytes_free());
 }
 
 static void update_bt_image_layer_proc(Layer *layer, GContext *ctx) {
-  APP_LOG(APP_LOG_LEVEL_ERROR, "Entered update layer proc");
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_bt_image_layer_proc: start, Heap Available: %d", heap_bytes_free());
+
+  GBitmap *old_s_bt_image = s_bt_image;
+
   if(bluetooth) {
     s_bt_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ON);
   } else {
@@ -127,6 +132,10 @@ static void update_bt_image_layer_proc(Layer *layer, GContext *ctx) {
   }
 
   graphics_draw_bitmap_in_rect(ctx, s_bt_image, layer_get_bounds(s_bt_image_layer));
+
+  // destroy old image to free up heap memory
+  gbitmap_destroy(old_s_bt_image);
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_bt_image_layer_proc: end, Heap Available: %d", heap_bytes_free());
 }
 
 void bluetooth_callback(bool connected) {
@@ -138,6 +147,10 @@ void bluetooth_callback(bool connected) {
 }
 
 static void update_status_image_layer_proc(Layer *layer, GContext *ctx) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_status_image_layer_proc: start, Heap Available: %d", heap_bytes_free());
+
+  GBitmap *old_s_status_image = s_status_image;
+
   if(productivity < 25) {
     s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_25_PERCENT);
   } else if(productivity < 50) {
@@ -148,10 +161,17 @@ static void update_status_image_layer_proc(Layer *layer, GContext *ctx) {
     s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_100_PERCENT);
   }
 
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_status_image_layer_proc: before draw, Heap Available: %d", heap_bytes_free());
   graphics_draw_bitmap_in_rect(ctx, s_status_image, layer_get_bounds(s_status_image_layer));
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_status_image_layer_proc: after draw, Heap Available: %d", heap_bytes_free());
+
+  // destroy old image to free up heap memory
+  gbitmap_destroy(old_s_status_image);
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_status_image_layer_proc: end, Heap Available: %d", heap_bytes_free());
 }
 
 static void update_progress_layer_proc(Layer *layer, GContext *ctx) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "update_progress_layer_proc: start, Heap Available: %d", heap_bytes_free());
   GRect bounds = layer_get_bounds(layer);
 
   graphics_context_set_fill_color(ctx, GColorBlack);
@@ -171,11 +191,14 @@ static void update_progress_layer_proc(Layer *layer, GContext *ctx) {
   graphics_fill_rect(ctx, (GRect) { .origin = { 99, 111 }, .size = { 3, 5 } }, 0, GCornerNone);
 
   graphics_fill_rect(ctx, (GRect) { .origin = { 2, 93 }, .size = { productivity, 15 } }, 0, GCornerNone);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "update_progress_layer_proc: end, Heap Available: %d", heap_bytes_free());
 }
 
 static void window_load(Window *window) {
-   bool is_connected = bluetooth_connection_service_peek();
-   bluetooth_callback(is_connected);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Got into window_load!");
+
+  bool is_connected = bluetooth_connection_service_peek();
+  bluetooth_callback(is_connected);
 
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
@@ -236,6 +259,7 @@ static void window_unload(Window *window) {
 }
 
 static void init(void) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Got into init!");
   // read the settings
   inverted = persist_read_bool(INVERTED_SETTINGS_KEY);
 
