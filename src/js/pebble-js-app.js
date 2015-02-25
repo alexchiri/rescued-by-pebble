@@ -60,8 +60,13 @@ var getRescueTimeProductivity = function () {
             console.log("Sum is: " + sum);
             console.log("Weight is: " + weight);
 
-            var productivity = Math.round(sum / weight);
-            console.log("Calculated productivity level to: " + productivity);
+            var productivity = 0;
+            if(!isNaN(sum) && weight > 0) {
+                productivity = Math.round(sum / weight);
+                console.log("Calculated productivity level to: " + productivity);
+            } else {
+                console.log("Cannot calculate productivity!");
+            }
 
             var dictionary = {
                 "productivity": productivity
