@@ -1,7 +1,7 @@
 # Rescued by Pebble
 A Pebble watchface that checks your productivity levels using the data from [RescueTime](https://rescuetime.com) and optionally gives you a "vibe" if you're not focused on your work.
 
-![](http://0f8f28fe275e3a043777-67ab80ec00c7299bd1255995bf933a71.r1.cf2.rackcdn.com/rescued-by-pebble-explanation-full.png)
+![](http://0f8f28fe275e3a043777-67ab80ec00c7299bd1255995bf933a71.r1.cf2.rackcdn.com/rescued-by-pebble-explanation-full2.png)
 
 # Next to implement
 
