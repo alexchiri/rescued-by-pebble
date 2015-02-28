@@ -21,6 +21,22 @@ static bool inverted;
 
 #define INVERTED_SETTINGS_KEY 0
 
+static void redraw_inverted(bool new_inverted, bool startup) {
+  if(new_inverted == true) {
+    if(startup || inverted == false) {
+      Layer *window_layer = window_get_root_layer(window);
+      GRect bounds = layer_get_bounds(window_layer);
+
+      inverter_layer = inverter_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
+      layer_add_child(window_layer, inverter_layer_get_layer(inverter_layer));
+    }
+  } else {
+    if(!startup && inverted == true) {
+      inverter_layer_destroy(inverter_layer);
+    }
+  }
+}
+
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   APP_LOG(APP_LOG_LEVEL_INFO, "Message received!");
   
@@ -37,27 +53,11 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       layer_mark_dirty(s_progress_layer);
       layer_mark_dirty(s_status_image_layer);
       break;
-    case INVERTED:
-      if(strcmp("on", t->value->cstring) == 0) {
-        persist_write_bool(INVERTED_SETTINGS_KEY, true);
-
-        if(inverted == false) {
-          Layer *window_layer = window_get_root_layer(window);
-          GRect bounds = layer_get_bounds(window_layer);
-
-          inverter_layer = inverter_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, bounds.size.h } });
-          layer_add_child(window_layer, inverter_layer_get_layer(inverter_layer));
-        }
-        inverted = true;
-      } else {
-        persist_write_bool(INVERTED_SETTINGS_KEY, false);
-
-        if(inverted == true) {
-          inverter_layer_destroy(inverter_layer);
-        }
-
-        inverted = false;
-      }
+    case INVERTED:;
+      bool new_inverted = strcmp("on", t->value->cstring) == 0 ? true : false;
+      persist_write_bool(INVERTED_SETTINGS_KEY, new_inverted);
+      redraw_inverted(new_inverted, false);
+      inverted = new_inverted;
       break;
     case API_KEY:
       break;
@@ -250,6 +250,8 @@ static void window_load(Window *window) {
   bool is_connected = bluetooth_connection_service_peek();
   bluetooth_callback(is_connected);
 
+  redraw_inverted(inverted, true);
+
   APP_LOG(APP_LOG_LEVEL_DEBUG, "window_load: end");
 }
 
@@ -274,6 +276,7 @@ static void init(void) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "init: start");
   // read the settings
   inverted = persist_read_bool(INVERTED_SETTINGS_KEY);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "init: inverted value %s", inverted ? "true" : "false");
 
   window = window_create();
 
