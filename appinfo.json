@@ -46,6 +46,16 @@
             "type": "font",
             "name": "BANANA_BRICK_36",
             "file": "fonts/banana_brick_36.ttf"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_COFFEE",
+            "file": "images/coffee.png"
+          },
+          {
+            "type": "png",
+            "name": "IMAGE_NO_CONNECTION",
+            "file": "images/noconnection.png"
           }
         ]
     },

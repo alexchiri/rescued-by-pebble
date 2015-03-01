@@ -37,6 +37,7 @@ var getRescueTimeProductivity = function () {
             // will calculate the productivity as weighted mean, based on the number of seconds each productivity level was reached
             var sum = 0;
             var weight = 0;
+            var past = new Date(Date.now().getTime() - 6*60000);
 
             for (var i = json.rows.length - 1; i >= 0 && !shouldStop; i--) {
                 var productivityData = json.rows[i];
@@ -46,7 +47,7 @@ var getRescueTimeProductivity = function () {
                     maxDate = dataDate;
                 }
 
-                if (dataDate < maxDate) {
+                if (dataDate < past || dataDate < maxDate) {
                     shouldStop = true;
                 } else {
                     sum = sum + parseInt(productivityData[1]) * (parseInt(productivityData[3]) + 2) * 25;
@@ -65,7 +66,8 @@ var getRescueTimeProductivity = function () {
                 productivity = Math.round(sum / weight);
                 console.log("Calculated productivity level to: " + productivity);
             } else {
-                console.log("Cannot calculate productivity!");
+                productivity = 110;
+                console.log("Cannot calculate productivity, probably having some offline time!");
             }
 
             var dictionary = {

@@ -171,6 +171,8 @@ static void update_status_image_layer_proc(Layer *layer, GContext *ctx) {
     s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_75_PERCENT);
   } else if(productivity <= 100) {
     s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_100_PERCENT);
+  } else if(productivity == 110) {
+    s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_COFFEE);
   }
 
   APP_LOG(APP_LOG_LEVEL_ERROR, "update_status_image_layer_proc: before draw, Heap Available: %d", heap_bytes_free());
@@ -184,25 +186,32 @@ static void update_status_image_layer_proc(Layer *layer, GContext *ctx) {
 
 static void update_progress_layer_proc(Layer *layer, GContext *ctx) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "update_progress_layer_proc: start, Heap Available: %d", heap_bytes_free());
+
   GRect bounds = layer_get_bounds(layer);
 
-  graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 2, 90 }, .size = { 100, 3 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 2, 108 }, .size = { 100, 3 } }, 0, GCornerNone);
+  if(productivity == 110) {
+    graphics_context_set_text_color(ctx, GColorBlack);
+    graphics_draw_text(ctx, "offline time", fonts_get_system_font(FONT_KEY_GOTHIC_28), (GRect) { .origin = { 2, 80 }, .size = { 100, 21 } }, GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  } else {
+    graphics_context_set_fill_color(ctx, GColorBlack);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 2, 90 }, .size = { 100, 3 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 2, 108 }, .size = { 100, 3 } }, 0, GCornerNone);
 
-  graphics_fill_rect(ctx, (GRect) { .origin = { 2, 85 }, .size = { 3, 5 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 27, 87 }, .size = { 3, 3 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 52, 85 }, .size = { 3, 5 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 77, 87 }, .size = { 3, 3 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 99, 85 }, .size = { 3, 5 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 2, 85 }, .size = { 3, 5 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 27, 87 }, .size = { 3, 3 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 52, 85 }, .size = { 3, 5 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 77, 87 }, .size = { 3, 3 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 99, 85 }, .size = { 3, 5 } }, 0, GCornerNone);
 
-  graphics_fill_rect(ctx, (GRect) { .origin = { 2,  111}, .size = { 3, 5 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 27, 111 }, .size = { 3, 3 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 52, 111 }, .size = { 3, 5 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 77, 111 }, .size = { 3, 3 } }, 0, GCornerNone);
-  graphics_fill_rect(ctx, (GRect) { .origin = { 99, 111 }, .size = { 3, 5 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 2,  111}, .size = { 3, 5 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 27, 111 }, .size = { 3, 3 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 52, 111 }, .size = { 3, 5 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 77, 111 }, .size = { 3, 3 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 99, 111 }, .size = { 3, 5 } }, 0, GCornerNone);
 
-  graphics_fill_rect(ctx, (GRect) { .origin = { 2, 93 }, .size = { productivity, 15 } }, 0, GCornerNone);
+    graphics_fill_rect(ctx, (GRect) { .origin = { 2, 93 }, .size = { productivity, 15 } }, 0, GCornerNone);
+  }
+
   APP_LOG(APP_LOG_LEVEL_DEBUG, "update_progress_layer_proc: end, Heap Available: %d", heap_bytes_free());
 }
 
