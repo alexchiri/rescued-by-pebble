@@ -13,6 +13,8 @@ The watchface connects to the [RescueTime](https://rescuetime.com) API every 5 m
 * Vibration when productivity levels are low
 
 ## Version history
+1.4 Update progress and smiley when cannot communicate with the phone.
+
 1.3 Show offline time and when the watchface cannot retrieve productivity data
 
 1.2 Fixed bugs about applying the inverted layer or not at startup, based on the settings
