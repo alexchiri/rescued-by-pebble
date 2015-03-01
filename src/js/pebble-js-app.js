@@ -37,7 +37,7 @@ var getRescueTimeProductivity = function () {
             // will calculate the productivity as weighted mean, based on the number of seconds each productivity level was reached
             var sum = 0;
             var weight = 0;
-            var past = new Date(Date.now().getTime() - 6*60000);
+            var past = new Date(Date.now() - 6*60000);
 
             for (var i = json.rows.length - 1; i >= 0 && !shouldStop; i--) {
                 var productivityData = json.rows[i];
