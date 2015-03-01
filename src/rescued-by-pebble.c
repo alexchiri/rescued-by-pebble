@@ -77,6 +77,7 @@ static void inbox_dropped_callback(AppMessageResult reason, void *context) {
 
 static void outbox_failed_callback(DictionaryIterator *iterator, AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "Outbox send failed!");
+  productivity = 120;
 }
 
 static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
@@ -173,6 +174,8 @@ static void update_status_image_layer_proc(Layer *layer, GContext *ctx) {
     s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_100_PERCENT);
   } else if(productivity == 110) {
     s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_COFFEE);
+  } else if(productivity == 120) {
+    s_status_image = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_NO_CONNECTION);
   }
 
   APP_LOG(APP_LOG_LEVEL_ERROR, "update_status_image_layer_proc: before draw, Heap Available: %d", heap_bytes_free());
@@ -192,6 +195,9 @@ static void update_progress_layer_proc(Layer *layer, GContext *ctx) {
   if(productivity == 110) {
     graphics_context_set_text_color(ctx, GColorBlack);
     graphics_draw_text(ctx, "offline time", fonts_get_system_font(FONT_KEY_GOTHIC_28), (GRect) { .origin = { 2, 80 }, .size = { 100, 21 } }, GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  } else if(productivity == 120) {
+    graphics_context_set_text_color(ctx, GColorBlack);
+    graphics_draw_text(ctx, "no conn.", fonts_get_system_font(FONT_KEY_GOTHIC_28), (GRect) { .origin = { 2, 80 }, .size = { 100, 21 } }, GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
   } else {
     graphics_context_set_fill_color(ctx, GColorBlack);
     graphics_fill_rect(ctx, (GRect) { .origin = { 2, 90 }, .size = { 100, 3 } }, 0, GCornerNone);
