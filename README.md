@@ -8,11 +8,13 @@ The watchface connects to the [RescueTime](https://rescuetime.com) API every 5 m
 
 ## Next to implement
 
-* ~~Show when you have some quality offline time~~ - testing
-* ~~Show more explicitly that you're disconnected from bluetooth or simply when you cannot retrieve the productivity data~~ - testing
+* ~~Show when you have some quality offline time~~
+* ~~Show more explicitly that you're disconnected from bluetooth or simply when you cannot retrieve the productivity data~~
 * Vibration when productivity levels are low
 
 ## Version history
+1.3 Show offline time and when the watchface cannot retrieve productivity data
+
 1.2 Fixed bugs about applying the inverted layer or not at startup, based on the settings
 
 1.1 Fixed division by 0 bug

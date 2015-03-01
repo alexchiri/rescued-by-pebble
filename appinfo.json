@@ -62,7 +62,7 @@
     "shortName": "Rescued by Pebble",
     "uuid": "9580f573-44fd-437c-91e4-df82accf76da",
     "versionCode": 3,
-    "versionLabel": "1.2",
+    "versionLabel": "1.3",
     "watchapp": {
         "watchface": true
     }
